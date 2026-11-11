@@ -1,0 +1,239 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #dfd4bf;
+    background-image: 
+      radial-gradient(#c8baa0 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(223, 212, 191, 0.95), rgba(210, 198, 175, 0.95));
+    background-size: 24px 24px, 100% 100%;
+    color: #1c1a17;
+    font-family: 'Courier Prime', 'Special Elite', Courier, monospace;
+  }
+}
+
+/* Lined Legal Paper Texture for Typewriter Desk */
+.legal-ruled-paper {
+  background-color: #fbf8f1;
+  background-image: linear-gradient(#e4dac5 1px, transparent 1px);
+  background-size: 100% 28px;
+  line-height: 28px;
+}
+
+/* Official Rubber Stamp */
+.stamp-badge {
+  display: inline-block;
+  font-family: 'Special Elite', monospace;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 6px 14px;
+  border-width: 3px;
+  border-style: solid;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px inset rgba(0,0,0,0.15);
+  user-select: none;
+  filter: contrast(120%) brightness(95%);
+}
+
+.stamp-red {
+  color: #8f1d1d;
+  border-color: #8f1d1d;
+  background-color: rgba(143, 29, 29, 0.05);
+}
+
+.stamp-green {
+  color: #1e4d2b;
+  border-color: #1e4d2b;
+  background-color: rgba(30, 77, 43, 0.05);
+}
+
+.stamp-blue {
+  color: #1e2b47;
+  border-color: #1e2b47;
+  background-color: rgba(30, 43, 71, 0.05);
+}
+
+/* Redaction marker */
+.redacted {
+  background-color: #1c1a17;
+  color: #1c1a17;
+  padding: 0 4px;
+  border-radius: 2px;
+  user-select: none;
+}
+.redacted:hover {
+  color: #dfd4bf;
+}
+
+/* Manila Folder Tab Effect */
+.folder-tab {
+  position: relative;
+  background-color: #d8caa7;
+  border: 2px solid #1c1a17;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Vintage Paperclip Effect */
+.paperclip {
+  position: absolute;
+  top: -12px;
+  left: 28px;
+  width: 14px;
+  height: 38px;
+  border: 3px solid #78716c;
+  border-radius: 8px;
+  background: transparent;
+  z-index: 20;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Bureaucratic Button (Neo-Brutalist Tactile Feel) */
+.btn-bureau {
+  background-color: #ede4d0;
+  color: #1c1a17;
+  border: 2px solid #1c1a17;
+  box-shadow: 4px 4px 0px #1c1a17;
+  font-family: 'Special Elite', monospace;
+  transition: all 0.08s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.btn-bureau:hover:not(:disabled) {
+  background-color: #f7f3e8;
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0px #1c1a17;
+}
+
+.btn-bureau:active:not(:disabled) {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0px #1c1a17;
+}
+
+.btn-bureau:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: 2px 2px 0px #1c1a17;
+}
+
+.btn-bureau-red {
+  background-color: #991b1b;
+  color: #f9f6ee;
+}
+.btn-bureau-red:hover:not(:disabled) {
+  background-color: #b91c1c;
+}
+
+/* Vintage typewriter ribbon styling */
+::selection {
+  background: #c8baa0;
+  color: #1c1a17;
+}
+
+/* Screen shake for gavel strike */
+@keyframes screen-shake {
+  0% { transform: translate(0, 0); }
+  15% { transform: translate(-6px, 5px) rotate(-0.5deg); }
+  30% { transform: translate(5px, -4px) rotate(0.5deg); }
+  45% { transform: translate(-4px, 3px); }
+  60% { transform: translate(3px, -2px); }
+  75% { transform: translate(-1px, 1px); }
+  100% { transform: translate(0, 0); }
+}
+
+.shake-screen {
+  animation: screen-shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* Desk Vignette (Warm Night Court Atmosphere) */
+.desk-vignette {
+  box-shadow: inset 0 0 100px rgba(44, 37, 30, 0.35), inset 0 0 200px rgba(28, 26, 23, 0.45);
+  pointer-events: none;
+}
+
+/* 3D Folder Flip & Open Animation */
+@keyframes folder-open {
+  0% {
+    opacity: 0;
+    transform: perspective(1200px) rotateX(12deg) translateY(24px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(1200px) rotateX(0deg) translateY(0) scale(1);
+  }
+}
+
+.animate-folder-open {
+  animation: folder-open 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Pneumatic Tube Suction Animation (Submitting plea) */
+@keyframes pneumatic-slide-up {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  40% {
+    transform: translateY(-8px) scale(0.99);
+  }
+  100% {
+    transform: translateY(-260px) scale(0.85);
+    opacity: 0;
+  }
+}
+
+.animate-pneumatic-dispatch {
+  animation: pneumatic-slide-up 0.55s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+}
+
+/* Gavel Strike Swing Animation */
+@keyframes gavel-swing {
+  0% {
+    transform: rotate(-55deg) translate(-20px, -30px);
+    opacity: 0;
+  }
+  60% {
+    transform: rotate(0deg) translate(0, 0);
+    opacity: 1;
+  }
+  75% {
+    transform: rotate(-10deg) translate(-3px, -4px);
+  }
+  100% {
+    transform: rotate(0deg) translate(0, 0);
+    opacity: 1;
+  }
+}
+
+.animate-gavel-strike {
+  transform-origin: 85% 85%;
+  animation: gavel-swing 0.45s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.shake-it {
+  animation: screen-shake 0.3s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* Stamp Slam Animation */
+@keyframes stamp-slam {
+  0% {
+    transform: scale(2.2) rotate(-15deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(0.95) rotate(var(--rot, -3deg));
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(var(--rot, -3deg));
+    opacity: 1;
+  }
+}
+
+.animate-stamp-slam {
+  animation: stamp-slam 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
