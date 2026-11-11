@@ -60,7 +60,7 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
   "magistrateCommentary": "Veredicto final solemne del magistrado sobre la sesión..."
 }`;
 
-async function callMiniMax(messages: MiniMaxMessage[], temperature = 0.8): Promise<string> {
+async function callMiniMax(messages: MiniMaxMessage[], temperature = 0.7, maxTokens = 1000): Promise<string> {
   const url = `${config.minimax.baseUrl}/chat/completions`;
   const response = await fetch(url, {
     method: 'POST',
@@ -72,7 +72,12 @@ async function callMiniMax(messages: MiniMaxMessage[], temperature = 0.8): Promi
       model: config.minimax.model,
       messages,
       temperature,
-      max_tokens: 1500,
+      thinking: {
+        type: 'adaptive',
+      },
+      reasoning_effort: 'low',
+      max_completion_tokens: maxTokens,
+      max_tokens: maxTokens,
     }),
   });
 
@@ -111,12 +116,12 @@ export async function generateCase(roundNumber: number): Promise<CaseData> {
   }
 
   try {
-    console.log(`[MiniMax M3.1] Generating dynamic Kafkaesque Case for round ${roundNumber}...`);
+    console.log(`[MiniMax M3.1 Fast] Generating dynamic Kafkaesque Case for round ${roundNumber} [reasoning_effort: low]...`);
     const prompt = `Genera el expediente judicial para la Ronda ${roundNumber} de un tribunal de burocracia absurda. Debe ser cómico, extravagante y con 3 palabras obligatorias difíciles de hilar.`;
     const responseJson = await callMiniMax([
       { role: 'system', content: SYSTEM_PROMPT_CASE },
       { role: 'user', content: prompt }
-    ]);
+    ], 0.7, 600);
 
     const parsed = JSON.parse(responseJson) as CaseData;
     return {
@@ -141,12 +146,12 @@ export async function generateRivalPlea(caseData: CaseData): Promise<string> {
   }
 
   try {
-    console.log('[MiniMax M3.1] Generating Solo AI Rival plea...');
+    console.log('[MiniMax M3.1 Fast] Generating Solo AI Rival plea [reasoning_effort: low]...');
     const userPrompt = `Caso: "${caseData.title}"\nAcusación: "${caseData.description}"\nPalabras obligatorias: ${caseData.requiredWords.join(', ')}\nEscribe tu alegato de defensa.`;
     const response = await callMiniMax([
       { role: 'system', content: SYSTEM_PROMPT_RIVAL },
       { role: 'user', content: userPrompt }
-    ], 0.9);
+    ], 0.8, 300);
     return response.trim();
   } catch (err) {
     console.warn('[MiniMax M3.1] Rival plea fallback:', err);
@@ -165,7 +170,7 @@ export async function evaluatePleas(
   }
 
   try {
-    console.log(`[MiniMax M3.1] Evaluating ${pleas.length} pleas for case "${caseData.caseNumber}"...`);
+    console.log(`[MiniMax M3.1 Fast] Evaluating ${pleas.length} pleas for case "${caseData.caseNumber}" [reasoning_effort: low]...`);
     const payload = {
       caso: caseData,
       alegatos_de_sospechosos: pleas.map(p => ({
@@ -179,7 +184,7 @@ export async function evaluatePleas(
     const responseJson = await callMiniMax([
       { role: 'system', content: SYSTEM_PROMPT_EVALUATOR },
       { role: 'user', content: JSON.stringify(payload) }
-    ], 0.7);
+    ], 0.7, 1200);
 
     const parsed = JSON.parse(responseJson) as {
       evaluaciones: Array<Partial<PlayerEvaluation>>;

@@ -31,11 +31,26 @@ export class GameRoom {
 
   private io: Server;
   private timerHandle: NodeJS.Timeout | null = null;
+  private nextCasePromise: Promise<CaseData> | null = null;
+  private prefetchedRound: number | null = null;
 
   constructor(code: string, io: Server) {
     this.code = code;
     this.io = io;
     this.totalRounds = config.game.totalRounds;
+    // Prefetch round 1 case immediately while in lobby
+    this.prefetchCase(1);
+  }
+
+  private prefetchCase(round: number): void {
+    if (round > this.totalRounds) return;
+    if (this.prefetchedRound === round && this.nextCasePromise) return;
+
+    this.prefetchedRound = round;
+    this.nextCasePromise = generateCase(round).catch(err => {
+      console.warn(`[GameRoom] Error prefetching round ${round}:`, err);
+      return null as any;
+    });
   }
 
   public addPlayer(id: string, name: string, avatarIndex: number): Player {
@@ -89,6 +104,10 @@ export class GameRoom {
     this.currentRound = 0;
     this.latestVerdict = null;
     this.finalPodium = null;
+
+    if (this.prefetchedRound !== 1 || !this.nextCasePromise) {
+      this.prefetchCase(1);
+    }
     this.players.forEach(p => {
       p.score = 0;
       p.hasSubmitted = false;
@@ -130,11 +149,18 @@ export class GameRoom {
       p.reactions = {};
     });
 
-    // Broadcast loading
-    this.broadcastState();
+    // Use pre-fetched case if available, otherwise generate
+    let caseData: CaseData | null = null;
+    if (this.nextCasePromise && this.prefetchedRound === this.currentRound) {
+      caseData = await this.nextCasePromise;
+    }
+    if (!caseData) {
+      caseData = await generateCase(this.currentRound);
+    }
+    this.currentCase = caseData;
 
-    // Generate case with MiniMax M3.1
-    this.currentCase = await generateCase(this.currentRound);
+    // Immediately prefetch the NEXT round case in the background!
+    this.prefetchCase(this.currentRound + 1);
 
     // If there is an AI player, pre-generate its plea and choose an absurd attachment
     const aiPlayer = this.players.find(p => p.isAI);
