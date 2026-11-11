@@ -167,7 +167,7 @@ io.on('connection', (socket: Socket) => {
   });
 });
 
-httpServer.listen(config.port, () => {
+httpServer.listen(config.port, '0.0.0.0', () => {
   console.log('========================================================');
   console.log(`⚖️  TRIBUNAL DEL ABSURDO — MINISTERIO DE CAUSAS PERDIDAS`);
   console.log(`🏛️  Servidor escuchando en: http://localhost:${config.port}`);

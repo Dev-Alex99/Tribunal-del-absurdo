@@ -4,7 +4,7 @@
   "private": true,
   "description": "Juego multijugador party para navegador con MiniMax M3.1 y estética de expediente burocrático kafkiano",
   "scripts": {
-    "postinstall": "npm install --prefix server && npm install --prefix client",
+    "postinstall": "npm install --include=dev --prefix server && npm install --include=dev --prefix client",
     "install:all": "npm install && npm run postinstall",
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",
@@ -14,7 +14,7 @@
     "build": "npm run build:client && npm run build:server",
     "start": "cd server && npm start"
   },
-  "devDependencies": {
+  "dependencies": {
     "concurrently": "^9.1.2"
   }
 }
